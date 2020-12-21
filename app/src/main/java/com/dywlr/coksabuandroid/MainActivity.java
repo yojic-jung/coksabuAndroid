@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
             mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
 
+
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
