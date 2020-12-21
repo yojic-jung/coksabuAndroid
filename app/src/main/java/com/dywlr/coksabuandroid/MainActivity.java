@@ -1,5 +1,14 @@
 package com.dywlr.coksabuandroid;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
@@ -21,13 +30,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -60,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
     public final static int FILECHOOSER_NORMAL_REQ_CODE = 2001;
     public final static int FILECHOOSER_LOLLIPOP_REQ_CODE = 2002;
     private Uri cameraImageUri = null;
+    private final int MY_PERMISSIONS_REQUEST_CAMERA=1001;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,37 +271,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //권한 획득 여부에 따른 결과 반환
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-        if (requestCode == 1) {
-            if (grantResults.length > 0) {
-                for (int i = 0; i < grantResults.length; ++i) {
-                    if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                        // 카메라, 저장소 중 하나라도 거부한다면 앱실행 불가 메세지 띄움
-                        new AlertDialog.Builder(this).setTitle("알림").setMessage("권한을 허용해주셔야 앱을 이용할 수 있습니다.")
-                                .setPositiveButton("종료", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        finish();
-                                    }
-                                }).setNegativeButton("권한 설정", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                        .setData(Uri.parse("package:" + getApplicationContext().getPackageName()));
-                                getApplicationContext().startActivity(intent);
-                            }
-                        }).setCancelable(false).show();
+                    Toast.makeText(this,"승인이 허가되어 있습니다.",Toast.LENGTH_LONG).show();
 
-                        return;
-                    }
+                } else {
+                    Toast.makeText(this,"아직 승인받지 않았습니다.",Toast.LENGTH_LONG).show();
                 }
-                Toast.makeText(this, "Succeed Read/Write external storage !", Toast.LENGTH_SHORT).show();
-                //startApp();
+                return;
             }
+
         }
     }
 
@@ -356,13 +347,31 @@ public class MainActivity extends AppCompatActivity {
         // File 객체의 URI 를 얻는다.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             String strpa = getApplicationContext().getPackageName();
-            cameraImageUri = FileProvider.getUriForFile(this, strpa + ".fileprovider", file);
+            cameraImageUri = FileProvider.getUriForFile(this, "com.dywlr.coksabuandroid.fileProvider", file);
         } else {
             cameraImageUri = Uri.fromFile(file);
         }
         intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
 
         if (!_isCapture) { // 선택팝업 카메라, 갤러리 둘다 띄우고 싶을 때
+            //카메라 권한 승인
+            int permssionCheck = ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA);
+
+            if (permssionCheck!= PackageManager.PERMISSION_GRANTED) {
+
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.CAMERA)) {
+                    Toast.makeText(this,"사용을 위해 카메라 권한에 승인해주세요.",Toast.LENGTH_LONG).show();
+                } else {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.CAMERA},
+                            MY_PERMISSIONS_REQUEST_CAMERA);
+                    Toast.makeText(this,"사용을 위해 카메라 권한에 승인해주세요.",Toast.LENGTH_LONG).show();
+
+                }
+            }
+            //여기까지 카메라 권한 승인 없어도 갤러리에는 접근 가능함
+
             Intent pickIntent = new Intent(Intent.ACTION_PICK);
             pickIntent.setType(MediaStore.Images.Media.CONTENT_TYPE);
             pickIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
