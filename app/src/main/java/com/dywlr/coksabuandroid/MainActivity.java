@@ -127,19 +127,19 @@ public class MainActivity extends AppCompatActivity {
         mWebSettings.setJavaScriptCanOpenWindowsAutomatically(false); // 자바스크립트 새창 띄우기(멀티뷰) 허용 여부
         mWebSettings.setLoadWithOverviewMode(true); // 메타태그 허용 여부
         mWebSettings.setUseWideViewPort(true); // 화면 사이즈 맞추기 허용 여부
-        mWebSettings.setSupportZoom(false); // 화면 줌 허용 여부
-        mWebSettings.setBuiltInZoomControls(false); // 화면 확대 축소 허용 여부
+        mWebSettings.setSupportZoom(true); // 화면 줌 허용 여부
+        mWebSettings.setBuiltInZoomControls(true); // 화면 확대 축소 허용 여부
         mWebSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN); // 컨텐츠 사이즈 맞추기
         mWebSettings.setCacheMode(WebSettings.LOAD_NO_CACHE); // 브라우저 캐시 허용 여부
         mWebSettings.setDomStorageEnabled(true); // 로컬저장소 허용 여부
         mWebSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        mWebSettings.setBuiltInZoomControls(true);
-        mWebSettings.setSupportZoom(true);
         mWebSettings.setDisplayZoomControls(false);
+
+
 
         //userAgent를 통하여 앱으로 접속한 고유 코드를 보내주어 웹에서 앱으로 접속했는지 유무를 알수 있게 된다.
         String userAgent = mWebSettings.getUserAgentString();
-        mWebSettings.setUserAgentString(userAgent+" APP_WISHRROM_Android");
+        mWebSettings.setUserAgentString(userAgent+" APP_WISHROOM_Android");
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         Log.i("HTTPS통신", "서버로부터 리턴받은 토큰값: "+ returnToken);
                         Log.i("HTTPS통신", "서버로부터 리턴받은 이메일: "+ email);
-                        Log.i("HTTPS통신" ,"서버에서 업데이스 상태: "+ status);
+                        Log.i("HTTPS통신" ,"서버에서 업데이트 상태: "+ status);
                     }
                 });
 
@@ -340,38 +340,6 @@ public class MainActivity extends AppCompatActivity {
 
     // 카메라 기능 구현
     private void runCamera(boolean _isCapture) {
-        Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        File path = getFilesDir();
-        File file = new File(path, "sample.png"); // sample.png 는 카메라로 찍었을 때 저장될 파일명이므로 사용자 마음대로
-        // File 객체의 URI 를 얻는다.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            String strpa = getApplicationContext().getPackageName();
-            cameraImageUri = FileProvider.getUriForFile(this, "com.dywlr.coksabuandroid.fileProvider", file);
-        } else {
-            cameraImageUri = Uri.fromFile(file);
-        }
-        intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
-
-        if (!_isCapture) { // 선택팝업 카메라, 갤러리 둘다 띄우고 싶을 때
-            //카메라 권한 승인
-            int permssionCheck = ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA);
-
-            if (permssionCheck!= PackageManager.PERMISSION_GRANTED) {
-
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.CAMERA)) {
-                    Toast.makeText(this,"사용을 위해 카메라 권한에 승인해주세요.",Toast.LENGTH_LONG).show();
-                } else {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.CAMERA},
-                            MY_PERMISSIONS_REQUEST_CAMERA);
-                    Toast.makeText(this,"사용을 위해 카메라 권한에 승인해주세요.",Toast.LENGTH_LONG).show();
-
-                }
-            }
-            //여기까지 카메라 권한 승인 없어도 갤러리에는 접근 가능함
 
             Intent pickIntent = new Intent(Intent.ACTION_PICK);
             pickIntent.setType(MediaStore.Images.Media.CONTENT_TYPE);
@@ -380,12 +348,9 @@ public class MainActivity extends AppCompatActivity {
             String pickTitle = "사진 가져올 방법을 선택하세요.";
             Intent chooserIntent = Intent.createChooser(pickIntent, pickTitle);
 
-            // 카메라 intent 포함시키기..
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Parcelable[]{intentCamera});
+
             startActivityForResult(chooserIntent, FILECHOOSER_LOLLIPOP_REQ_CODE);
-        } else {// 바로 카메라 실행..
-            startActivityForResult(intentCamera, FILECHOOSER_LOLLIPOP_REQ_CODE);
-        }
+
 
     }
 
