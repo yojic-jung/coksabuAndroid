@@ -5,9 +5,17 @@
 <br/>
 <br/>
 
+## 설정파일 
+* [build.gradle](https://github.com/yojic-jung/coksabuAndroid/blob/main/app/build.gradle)
+* [AndroidManifest.xml](https://github.com/yojic-jung/coksabuAndroid/blob/main/app/src/main/AndroidManifest.xml)
+
+<br/>
+<br/>
+
 ## 소스파일
-* [MainActivity.java](https://github.com/yojic-jung/coksabuAndroid/blob/main/app/src/main/java/com/dywlr/coksabuandroid/MainActivity.java) : 세션공유 및 권한 획득
+* [MainActivity.java](https://github.com/yojic-jung/coksabuAndroid/blob/main/app/src/main/java/com/dywlr/coksabuandroid/MainActivity.java) : 웹뷰 및 권한 획득
 * [MyFireBaseMessagingService.java](https://github.com/yojic-jung/coksabuAndroid/blob/main/app/src/main/java/com/dywlr/coksabuandroid/MyFireBaseMessagingService.java) : 푸시알림
 * [HttpTask.java](https://github.com/yojic-jung/coksabuAndroid/blob/main/app/src/main/java/com/dywlr/coksabuandroid/HttpTask.java) : HTTP통신
+* [BadgeTask.java](https://github.com/yojic-jung/coksabuAndroid/blob/main/app/src/main/java/com/dywlr/coksabuandroid/BadgeTask.java): 배지 카운트 설정
 <br/>
 
