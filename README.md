@@ -6,8 +6,8 @@
 <br/>
 
 ## 소스파일
-#### [세션공유 및 권한 획득](https://github.com/yojic-jung/coksabuAndroid/blob/main/app/src/main/java/com/dywlr/coksabuandroid/MainActivity.java)  
-#### [푸시알림](https://github.com/yojic-jung/coksabuAndroid/blob/main/app/src/main/java/com/dywlr/coksabuandroid/MyFireBaseMessagingService.java)  
-#### [HTTP통신](https://github.com/yojic-jung/coksabuAndroid/blob/main/app/src/main/java/com/dywlr/coksabuandroid/HttpTask.java))
+* [MainActivity.java](https://github.com/yojic-jung/coksabuAndroid/blob/main/app/src/main/java/com/dywlr/coksabuandroid/MainActivity.java) : 세션공유 및 권한 획득
+* [MyFireBaseMessagingService.java](https://github.com/yojic-jung/coksabuAndroid/blob/main/app/src/main/java/com/dywlr/coksabuandroid/MyFireBaseMessagingService.java) : 푸시알림
+* [HttpTask.java](https://github.com/yojic-jung/coksabuAndroid/blob/main/app/src/main/java/com/dywlr/coksabuandroid/HttpTask.java) : HTTP통신
 <br/>
 
